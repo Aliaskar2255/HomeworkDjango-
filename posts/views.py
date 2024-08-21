@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from posts.models import Post
 from django.shortcuts import redirect
+from posts.forms import PostForm
+
 
 
 def word(request):
@@ -12,28 +15,28 @@ def main_page(request):
     if request.method == 'GET':
         return render(request, template_name='main_page.html')
 
+@login_required(login_url='login')
 def post_list_view(request):
     posts = Post.objects.all()
     if request.method == 'GET':
-       return render(request, template_name='post_list.html', context={'posts': posts})
+       return render(request, template_name='posts/post_list.html', context={'posts': posts})
 
+@login_required(login_url='login')
 def post_detail_view(request, post_id):
     post = Post.objects.get(id=post_id)
     if request.method == 'GET':
-        return render(request, 'post_detail.html', context={'post': post})
+        return render(request, 'posts/post_detail.html', context={'post': post})
 
+@login_required(login_url='login')
 def post_create_view(request):
     if request.method == 'GET':
-        return render(request, 'post_create.html')
+        form = PostForm()
+        return render(request, 'posts/post_create.html', context={'form': form})
     if request.method =='POST':
-        image=request.FILES.get('image')
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        rate = request.POST.get('rate')
-        Post.objects.create(
-        image=image,
-        title=title,
-        content=content,
-        rate=rate
-        )
+        # Post.objects.create(
+        # image=image,
+        # title=title,
+        # content=content,
+        # rate=rate
+        # )
         return redirect('/posts/')
