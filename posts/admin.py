@@ -1,5 +1,5 @@
 from django.contrib import admin
-from posts.models import Post
+from posts.models import Post, Comment
 from posts.models import Category
 from posts.models import Tag
 
@@ -23,6 +23,12 @@ class CategoryAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'id')
     list_display_links = ('name',)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post', 'text')
+    list_display_links = ('id', 'post')
 
 
 
